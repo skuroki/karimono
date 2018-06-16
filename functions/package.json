@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "firebase-admin": "^5.12.1",
-    "firebase-functions": "^1.0.3"
+    "firebase-functions": "^1.0.3",
+    "node-fetch": "^2.1.2",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "eslint": "^4.12.0",
