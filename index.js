@@ -78,6 +78,9 @@ function executeList(words) {
     if (item.borrower) {
       listItem += ' <@' + item.borrower + '>に貸出中';
     }
+    if (item.waiting) {
+      listItem += ' <@' + item.waiting + '>が返却待ち';
+    }
     body += listItem + '\n';
   });
   return body;
@@ -89,7 +92,16 @@ function executeBorrow(name, userId) {
     let item = JSON.parse(property);
     let borrower = item.borrower;
     if (borrower) {
-      return name + 'は<@' + borrower + '>に貸出中です';
+      let response = name + 'は<@' + borrower + '>に貸出中です';
+      let waiting = item.waiting;
+      if (waiting) {
+        response += ' <@' + waiting + '>が返却を待っています';
+      } else {
+        item.waiting = userId;
+        scriptProperties.setProperty(name, JSON.stringify(item));
+        response += ' 返却されたらお知らせします';
+      }
+      return response;
     } else {
       item.borrower = userId;
       scriptProperties.setProperty(name, JSON.stringify(item));
@@ -108,8 +120,14 @@ function executeReturn(name, userId) {
     if (borrower) {
       if (borrower == userId) {
         delete item.borrower;
+        let response = name + 'の返却を受け付けました';
+        let waiting = item.waiting;
+        if (waiting) {
+          response += '\n\n<@' + waiting + '> 返却されました';
+          delete item.waiting;
+        }
         scriptProperties.setProperty(name, JSON.stringify(item));
-        return name + 'の返却を受け付けました';
+        return response;
       } else {
         return name + 'は<@' + borrower + '>に貸出中です';
       }
