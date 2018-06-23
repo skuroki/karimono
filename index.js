@@ -69,7 +69,12 @@ function executeDelete(name) {
 function executeList() {
   let body = '';
   scriptProperties.getKeys().forEach(name => {
-    body += name + ' ';
+    let listItem = name;
+    let item = JSON.parse(scriptProperties.getProperty(name));
+    if (item.borrower) {
+      listItem += ' <@' + item.borrower + '>に貸出中';
+    }
+    body += listItem + '\n';
   });
   return body;
 }
