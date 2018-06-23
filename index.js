@@ -30,7 +30,7 @@ function executeCommand(command, userId) {
         return executeDelete(name);
       }
     case 'list':
-      return executeList();
+      return executeList(command.slice(1));
     case 'kariru':
       {
         let name = command[1];
@@ -66,9 +66,13 @@ function executeDelete(name) {
   }
 }
 
-function executeList() {
+function executeList(words) {
   let body = '';
-  scriptProperties.getKeys().forEach(name => {
+  scriptProperties.getKeys().filter(name => {
+    return words.every(w => {
+      return name.indexOf(w) > -1;
+    });
+  }).forEach(name => {
     let listItem = name;
     let item = JSON.parse(scriptProperties.getProperty(name));
     if (item.borrower) {
