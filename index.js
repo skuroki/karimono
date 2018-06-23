@@ -13,18 +13,25 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+const usage = '追加する時は `/karimono add 追加するもの`\n' +
+  '削除する時は `/karimono delete 削除するもの`\n' +
+  '検索する時は `/karimono list 検索ワード（何個でもOK、なしでもOK）`\n' +
+  '借りたい時は `/karimono kariru 借りたいもの `\n' +
+  '返却する時は `/karimono kaesu 返却するもの`';
+
+
 function executeCommand(command, userId) {
   switch (command[0]) {
     case 'add':
       if (command.length < 2) {
-        return 'TODO: write usage';
+        return usage;
       } else {
         let name = command[1];
         return executeAdd(name);
       }
     case 'delete':
       if (command.length < 2) {
-        return 'TODO: write usage';
+        return usage;
       } else {
         let name = command[1];
         return executeDelete(name);
@@ -42,7 +49,7 @@ function executeCommand(command, userId) {
         return executeReturn(name, userId);
       }
     default:
-      return 'TODO: write help';
+      return usage;
   }
 }
 
