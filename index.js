@@ -20,8 +20,7 @@ function executeCommand(command) {
         return 'TODO: write usage';
       } else {
         let name = command[1];
-        scriptProperties.setProperty(name, '{}');
-        return '';
+        return executeAdd(name);
       }
     case 'list':
       return executeList();
@@ -31,6 +30,16 @@ function executeCommand(command) {
       return '';
     default:
       return 'TODO: write help';
+  }
+}
+
+function executeAdd(name) {
+  let property = scriptProperties.getProperty(name);
+  if (property) {
+    return name + 'は既に登録されています';
+  } else {
+    scriptProperties.setProperty(name, '{}');
+    return name + 'を登録しました';
   }
 }
 
