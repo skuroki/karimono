@@ -1,4 +1,5 @@
 #!/bin/bash -ex
+npx eslint index.js
 npx babel index.js > deploy/index.js
 cd deploy
 clasp push

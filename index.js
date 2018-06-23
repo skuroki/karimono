@@ -1,43 +1,55 @@
+let scriptProperties = PropertiesService.getScriptProperties();
+
 function doPost(e) {
   console.log(JSON.stringify(e));
-  var scriptProperties = PropertiesService.getScriptProperties();
 
-  var command = e.parameter.text.split(' ')
+  let command = e.parameter.text.split(' ');
+  let response = executeCommand(command);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      response_type: 'in_channel',
+      text: response }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function executeCommand(command) {
   switch (command[0]) {
     case 'add':
       if (command.length < 2) {
-        return ContentService
-          .createTextOutput('TODO: write usage');
+        return 'TODO: write usage';
       } else {
-        var name = command[1];
-        scriptProperties.setProperty('name', '{}');
-        return ContentService
-          .createTextOutput('');
+        let name = command[1];
+        scriptProperties.setProperty(name, '{}');
+        return '';
       }
     case 'list':
-      var body = '';
-      scriptProperties.getKeys().forEach(name => {
-        body += name + ' ';
-      });
-      return ContentService
-        .createTextOutput(body);
+      return executeList();
     case 'count':
-      var countString = scriptProperties.getProperty('COUNT');
-      var count = 0;
-      if (countString) {
-        count = parseInt(countString);
-      }
-      count = count + 1;
-      scriptProperties.setProperty('COUNT', count);
-
-      return ContentService
-        .createTextOutput(JSON.stringify({ response_type: "in_channel", text: "Hello this is karimono " + count.toString() }))
-        .setMimeType(ContentService.MimeType.JSON);
+      return executeCount();
     case 'silent':
-      return ContentService
-        .createTextOutput('');
+      return '';
     default:
-      return ContentService
-        .createTextOutput('TODO: write help');
+      return 'TODO: write help';
   }
+}
+
+function executeList() {
+  let body = '';
+  scriptProperties.getKeys().forEach(name => {
+    body += name + ' ';
+  });
+  return body;
+}
+
+function executeCount() {
+  let countString = scriptProperties.getProperty('COUNT');
+  let count = 0;
+  if (countString) {
+    count = parseInt(countString);
+  }
+  count = count + 1;
+  scriptProperties.setProperty('COUNT', count);
+
+  return 'Hello this is karimono ' + count.toString();
 }
