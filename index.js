@@ -22,6 +22,13 @@ function executeCommand(command) {
         let name = command[1];
         return executeAdd(name);
       }
+    case 'delete':
+      if (command.length < 2) {
+        return 'TODO: write usage';
+      } else {
+        let name = command[1];
+        return executeDelete(name);
+      }
     case 'list':
       return executeList();
     case 'count':
@@ -40,6 +47,16 @@ function executeAdd(name) {
   } else {
     scriptProperties.setProperty(name, '{}');
     return name + 'を登録しました';
+  }
+}
+
+function executeDelete(name) {
+  let property = scriptProperties.getProperty(name);
+  if (property) {
+    scriptProperties.deleteProperty(name);
+    return name + 'を削除しました';
+  } else {
+    return name + 'は登録されていません';
   }
 }
 
