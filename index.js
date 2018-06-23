@@ -4,7 +4,7 @@ function doPost(e) {
   console.log(JSON.stringify(e));
 
   let command = e.parameter.text.split(' ');
-  let response = executeCommand(command);
+  let response = executeCommand(command, e.parameter.user_id);
 
   return ContentService
     .createTextOutput(JSON.stringify({
@@ -13,7 +13,7 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function executeCommand(command) {
+function executeCommand(command, userId) {
   switch (command[0]) {
     case 'add':
       if (command.length < 2) {
@@ -31,6 +31,11 @@ function executeCommand(command) {
       }
     case 'list':
       return executeList();
+    case 'kariru':
+      {
+        let name = command[1];
+        return executeBorrow(name, userId);
+      }
     case 'count':
       return executeCount();
     case 'silent':
@@ -66,6 +71,23 @@ function executeList() {
     body += name + ' ';
   });
   return body;
+}
+
+function executeBorrow(name, userId) {
+  let property = scriptProperties.getProperty(name);
+  if (property) {
+    let item = JSON.parse(property);
+    let borrower = item.borrower;
+    if (borrower) {
+      return name + 'は <@' + borrower + '> に貸出中です';
+    } else {
+      item.borrower = userId;
+      scriptProperties.setProperty(name, JSON.stringify(item));
+      return name + 'を <@' + userId + '> に貸し出します';
+    }
+  } else {
+    return name + 'は登録されていません';
+  }
 }
 
 function executeCount() {
