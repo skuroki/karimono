@@ -41,10 +41,6 @@ function executeCommand(command, userId) {
         let name = command[1];
         return executeReturn(name, userId);
       }
-    case 'count':
-      return executeCount();
-    case 'silent':
-      return '';
     default:
       return 'TODO: write help';
   }
@@ -114,16 +110,4 @@ function executeReturn(name, userId) {
   } else {
     return name + 'は登録されていません';
   }
-}
-
-function executeCount() {
-  let countString = scriptProperties.getProperty('COUNT');
-  let count = 0;
-  if (countString) {
-    count = parseInt(countString);
-  }
-  count = count + 1;
-  scriptProperties.setProperty('COUNT', count);
-
-  return 'Hello this is karimono ' + count.toString();
 }
