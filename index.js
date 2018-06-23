@@ -85,11 +85,11 @@ function executeBorrow(name, userId) {
     let item = JSON.parse(property);
     let borrower = item.borrower;
     if (borrower) {
-      return name + 'は <@' + borrower + '> に貸出中です';
+      return name + 'は<@' + borrower + '>に貸出中です';
     } else {
       item.borrower = userId;
       scriptProperties.setProperty(name, JSON.stringify(item));
-      return name + 'を <@' + userId + '> に貸し出します';
+      return name + 'を<@' + userId + '>に貸し出します';
     }
   } else {
     return name + 'は登録されていません';
@@ -107,7 +107,7 @@ function executeReturn(name, userId) {
         scriptProperties.setProperty(name, JSON.stringify(item));
         return name + 'の返却を受け付けました';
       } else {
-        return name + 'は <@' + borrower + '> に貸出中です';
+        return name + 'は<@' + borrower + '>に貸出中です';
       }
     } else {
       return name + 'は貸し出されていません';
