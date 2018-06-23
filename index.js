@@ -36,6 +36,11 @@ function executeCommand(command, userId) {
         let name = command[1];
         return executeBorrow(name, userId);
       }
+    case 'kaesu':
+      {
+        let name = command[1];
+        return executeReturn(name, userId);
+      }
     case 'count':
       return executeCount();
     case 'silent':
@@ -84,6 +89,27 @@ function executeBorrow(name, userId) {
       item.borrower = userId;
       scriptProperties.setProperty(name, JSON.stringify(item));
       return name + 'を <@' + userId + '> に貸し出します';
+    }
+  } else {
+    return name + 'は登録されていません';
+  }
+}
+
+function executeReturn(name, userId) {
+  let property = scriptProperties.getProperty(name);
+  if (property) {
+    let item = JSON.parse(property);
+    let borrower = item.borrower;
+    if (borrower) {
+      if (borrower == userId) {
+        delete item.borrower;
+        scriptProperties.setProperty(name, JSON.stringify(item));
+        return name + 'の返却を受け付けました';
+      } else {
+        return name + 'は <@' + borrower + '> に貸出中です';
+      }
+    } else {
+      return name + 'は貸し出されていません';
     }
   } else {
     return name + 'は登録されていません';
