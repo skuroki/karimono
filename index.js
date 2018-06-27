@@ -1,7 +1,7 @@
 let scriptProperties = PropertiesService.getScriptProperties();
 
 function doPost(e) {
-  console.log(JSON.stringify(e));
+  console.log(JSON.stringify(e.parameter));
 
   let command = e.parameter.text.split(' ');
   let response = executeCommand(command, e.parameter.user_id);
